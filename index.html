@@ -1,29 +1,77 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>ЭкоМаркет – экологически чистые продукты</title>
+  <meta charset="UTF-8" />
+  <title>ЭкоМаркет – Эко-продукты</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f4f9f4;
+      background-color: #f0fdf4;
+      color: #333;
     }
     header {
-      background-color: #2e7d32;
+      background-color: #4caf50;
       color: white;
-      padding: 15px 20px;
+      padding: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
     }
     nav a {
       color: white;
-      margin: 0 15px;
+      margin: 0 12px;
       text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      color: #c8e6c9;
     }
     .container {
       padding: 20px;
+    }
+    h2 {
+      color: #2e7d32;
+    }
+    .search-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-filter input[type="text"] {
+      padding: 10px;
+      flex: 1;
+      min-width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .search-filter .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .search-filter .category-buttons button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      background-color: #81c784;
+      color: white;
+      cursor: pointer;
+    }
+    .search-filter .category-buttons button.active {
+      background-color: #4caf50;
     }
     .products {
       display: grid;
@@ -31,53 +79,72 @@
       gap: 20px;
     }
     .product {
-      background-color: white;
+      background: white;
       padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
       text-align: center;
+    }
+    .product img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .product h3 {
+      margin: 10px 0 5px;
+    }
+    .product p {
+      margin: 5px 0;
     }
     .product button {
       margin-top: 10px;
       padding: 8px 12px;
-      background-color: #66bb6a;
+      background-color: #81c784;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
     .cart {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      width: 300px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      max-height: 70vh;
-      overflow-y: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border: 2px solid #c8e6c9;
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+    .cart ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .cart li {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+    }
+    .cart li button {
+      background: transparent;
+      color: red;
+      border: none;
+      cursor: pointer;
     }
     form input, form textarea {
       width: 100%;
-      margin-top: 8px;
-      margin-bottom: 10px;
-      padding: 8px;
+      margin-top: 10px;
+      padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
     }
     form button {
-      background-color: #2e7d32;
+      background-color: #4caf50;
       color: white;
-      padding: 10px;
+      padding: 12px;
+      margin-top: 10px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       width: 100%;
-      cursor: pointer;
     }
     footer {
-      background: #eee;
+      background: #e8f5e9;
       padding: 20px;
       text-align: center;
       margin-top: 40px;
@@ -87,9 +154,11 @@
 <body>
 
 <header>
-  <div><strong>🌿 ЭкоМаркет</strong></div>
+  <div class="logo">
+    <img src="https://img.icons8.com/emoji/48/seedling.png" alt="logo">
+    ЭкоМаркет
+  </div>
   <nav>
-    <a href="#home">Главная</a>
     <a href="#products">Товары</a>
     <a href="#contacts">Контакты</a>
   </nav>
@@ -97,41 +166,49 @@
 
 <div class="container">
   <h2 id="products">Наши товары</h2>
-  <div class="products">
-    <div class="product">
+  <div class="search-filter">
+    <input type="text" id="searchInput" placeholder="Поиск по товарам..." onkeyup="filterProducts()" />
+    <div class="category-buttons">
+      <button onclick="filterCategory('all')" class="active">Все</button>
+      <button onclick="filterCategory('fruits')">Фрукты</button>
+      <button onclick="filterCategory('vegetables')">Овощи</button>
+      <button onclick="filterCategory('dairy')">Молочные</button>
+      <button onclick="filterCategory('beverages')">Напитки</button>
+      <button onclick="filterCategory('nuts')">Орехи</button>
+    </div>
+  </div>
+  <div class="products" id="productList">
+    <!-- Пример товара -->
+    <div class="product" data-category="fruits">
+      <img src="https://via.placeholder.com/150?text=Яблоки" alt="Органические яблоки">
       <h3>Органические яблоки</h3>
       <p>500 руб / кг</p>
       <button onclick="addToCart('Органические яблоки')">В корзину</button>
     </div>
-    <div class="product">
-      <h3>Молоко фермерское</h3>
-      <p>150 руб / литр</p>
-      <button onclick="addToCart('Молоко фермерское')">В корзину</button>
-    </div>
-    <div class="product">
-      <h3>Хлеб цельнозерновой</h3>
-      <p>120 руб</p>
-      <button onclick="addToCart('Хлеб цельнозерновой')">В корзину</button>
-    </div>
+    <!-- Добавьте остальные товары здесь, следуя той же структуре -->
+    <!-- ... -->
   </div>
-</div>
 
-<div class="cart" id="cart">
-  <h3>🛒 Корзина</h3>
-  <ul id="cart-items">
-    <li>Корзина пуста</li>
-  </ul>
-  <form id="order-form" onsubmit="submitOrder(event)">
-    <h4>Оформить заказ</h4>
-    <input type="text" id="name" placeholder="Ваше имя" required>
-    <input type="tel" id="phone" placeholder="Телефон" required>
-    <textarea id="address" placeholder="Адрес доставки" rows="3" required></textarea>
-    <button type="submit">Оформить</button>
-  </form>
+  <div class="cart" id="cart">
+    <h3>🛒 Ваша корзина</h3>
+    <ul id="cart-items">
+      <li>Корзина пуста</li>
+    </ul>
+
+    <form action="https://formspree.io/f/your-id" method="POST" onsubmit="return prepareOrder();">
+      <h4>📦 Оформление заказа</h4>
+      <input type="text" name="Имя" placeholder="Ваше имя" required>
+      <input type="tel" name="Телефон" placeholder="Телефон" required>
+      <textarea name="Адрес" placeholder="Адрес доставки" rows="3" required></textarea>
+      <input type="hidden" name="Товары" id="order-products">
+      <button type="submit">Оформить заказ</button>
+    </form>
+  </div>
 </div>
 
 <footer id="contacts">
   <p>📧 info@ecomarket.ru | 📞 +7 (999) 123-45-67</p>
+  <p>© 2025 ЭкоМаркет</p>
 </footer>
 
 <script>
@@ -145,8 +222,8 @@
     const saved = localStorage.getItem('cartItems');
     if (saved) {
       cartItems = JSON.parse(saved);
-      updateCartDisplay();
     }
+    updateCartDisplay();
   }
 
   function updateCartDisplay() {
@@ -155,9 +232,13 @@
     if (cartItems.length === 0) {
       list.innerHTML = '<li>Корзина пуста</li>';
     } else {
-      cartItems.forEach(item => {
+      cartItems.forEach((item, index) => {
         const li = document.createElement('li');
         li.textContent = item;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.onclick = () => removeFromCart(index);
+        li.appendChild(btn);
         list.appendChild(li);
       });
     }
@@ -169,30 +250,52 @@
     updateCartDisplay();
   }
 
-  function submitOrder(event) {
-    event.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const address = document.getElementById('address').value.trim();
-
-    if (cartItems.length === 0) {
-      alert("Ваша корзина пуста.");
-      return;
-    }
-
-    const orderDetails = `
-Заказ от: ${name}
-Телефон: ${phone}
-Адрес: ${address}
-Товары: ${cartItems.join(', ')}
-    `;
-
-    alert("Ваш заказ оформлен!\n\n" + orderDetails);
-
-    cartItems = [];
+  function removeFromCart(index) {
+    cartItems.splice(index, 1);
     saveCart();
     updateCartDisplay();
-    document.getElementById('order-form').reset();
+  }
+
+  function prepareOrder() {
+    if (cartItems.length === 0) {
+      alert("Корзина пуста!");
+      return false;
+    }
+    document.getElementById("order-products").value = cartItems.join(", ");
+    localStorage.removeItem('cartItems');
+    cartItems = [];
+    updateCartDisplay();
+    return true;
+  }
+
+  function filterProducts() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const products = document.querySelectorAll('.product');
+    products.forEach(product => {
+      const name = product.querySelector('h3').textContent.toLowerCase();
+      if (name.includes(input)) {
+        product.style.display = '';
+      } else {
+        product.style.display = 'none';
+      }
+    });
+  }
+
+  function filterCategory(category) {
+    const buttons = document.querySelectorAll('.category-buttons button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const products = document.querySelectorAll('.product');
+    products.forEach(product => {
+      if (category === 'all' || product.dataset.category === category) {
+        product.style.display = '';
+      } else {
+        product.style.display = 'none';
+      }
+    });
+    // Сбросить поиск при смене категории
+    document.getElementById('searchInput').value = '';
   }
 
   window.onload = loadCart;
@@ -200,3 +303,4 @@
 
 </body>
 </html>
+
